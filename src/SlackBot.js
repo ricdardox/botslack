@@ -12,18 +12,22 @@ class BotSlack {
   constructor() {
     this._decision = new Decision(Slack);
     this._controlAction = {};
+
   }
 
 
   init() {
     let bot = Slack.rtm.client()
-    let token = "xoxb-181031518647-JElpgCNrWWTbsXcZ15sqzWiB"
+    let token = "xoxb-181031518647-1sZ2TVLZRV98CLbJjzjFaNPl"
     this._decision.token = token;
     console.log('Iniciando Jarvis');
     bot.message((msg) => {
-      if (!msg.hasOwnProperty('username') || (msg.hasOwnProperty('username') && msg.username !== 'bot')) {
-        this._decision.action = msg;
-        this._decision.init();
+      if (!msg.hasOwnProperty('subtype') || (msg.hasOwnProperty('subtype') && msg.subtype !== 'me_message' && msg.subtype !== 'bot_message')&& msg.subtype !== 'file_share') {
+        this._decision.msg = msg;
+        this._decision.init({});
+        //console.log("Ricardo",msg);
+      }else{
+        //console.log("Bot",msg);
       }
     });
     bot.listen({

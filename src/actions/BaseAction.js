@@ -5,15 +5,15 @@ class BaseAction {
 
   constructor(slack) {
     this._slack = slack;
-    this._action = "";
+    this._msg = "";
     this._token = "";
     this._apiAIToken = "d4e1d57af43648fab7b12c1fbece62ac";
     this._apiAI = ApiAI(this._apiAIToken);
   }
 
   sendText(text) {
-    return new Promise((resolve,reject) => {
-      var request =   this._apiAI.textRequest(text, {
+    return new Promise((resolve, reject) => {
+      var request = this._apiAI.textRequest(text, {
         sessionId: '123'
       });
       request.on('response', (response) => {
@@ -27,14 +27,31 @@ class BaseAction {
     });
   }
 
+
+  sendMsgSlack(text) {
+    return new Promise((resolve, reject) => {
+      this._slack.chat.meMessage({
+        token: this._token,
+        channel: this._msg.channel,
+        text: text
+      }, (err, data) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(data);
+        };
+      });
+    });
+  }
+
   set token(token) {
     this._token = token;
   }
-  set action(action) {
-    this._action = action;
+  set msg(action) {
+    this._msg = action;
   }
 
-  init() {}
+  init(apiaiRes) {}
 
 }
 export default BaseAction;

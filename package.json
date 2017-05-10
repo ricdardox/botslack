@@ -5,6 +5,8 @@
   "main": "app.js",
   "dependencies": {
     "apiai": "^4.0.2",
+    "change-case": "^3.0.1",
+    "simple-git": "^1.72.0",
     "slack": "^8.3.0"
   },
   "devDependencies": {
