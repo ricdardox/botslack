@@ -8,10 +8,10 @@ class ToGreet extends BaseAction {
 
 
 
-  async init() {
+  async init(res) {
     return new Promise((resolve, reject) => {
       try {
-        let result = this.sendMsgSlack('Hola terricolas');
+        let result = this.sendMsgSlack(res.result.fulfillment.speech);
         resolve(result);
       } catch (e) {
         reject(e);

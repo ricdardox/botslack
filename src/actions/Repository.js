@@ -9,43 +9,42 @@ class Repository extends BaseAction {
 
     }
 
-    sortDirs() {
-        let dirs = Fs.readdirSync(this.env.PATH_REPOS);
-        let text = "Escoge el nombre del repositorio a actualizar\n";
-        dirs.forEach((elem, index) => {
-            text += `${index++}) ${elem}\n`;
-        });
-        return text;
-    }
 
 
-    async init() {
+    async init(res) {
+
         return new Promise((resolve, reject) => {
-            console.log('Nice you can show the repositories');
-            let dirs = this.sortDirs();
-            this.sendMsgSlack(dirs);
-            var simpleGit = require('simple-git')("/home/programador/proyectos/botslack");
-            simpleGit.pull('origin', 'master', {}, (error, result) => {
-                if (error) {
-                    return reject(error);
-                }
-                let token = this._token;
-                let content = result;
-                let filetype = "json";
-                let filename = "result.json";
-                let title = "Result";
-                let initial_comment = "Nice!";
-                let channels = this._msg.channel;
-                this._slack.files.upload({
-                    token,
-                    content,
-                    filetype,
-                    filename,
-                    title,
-                    channels
-                }, (err, data) => {})
-                resolve(result)
-            });
+
+            console.log('Nice you can show the repositories', res.result.parameters);
+            let path = `${this.env.PATH_REPOS}/${res.result.parameters.actualizar.proyecto}`;
+            if (Fs.existsSync(path)) {
+                var simpleGit = require('simple-git')(path);
+                simpleGit.pull('origin', 'master', {}, (error, result) => {
+                    if (error) {
+                        return reject(error);
+                    }
+                    let token = this._token;
+                    let content = result;
+                    let filetype = "json";
+                    let filename = "result.json";
+                    let title = "Result";
+                    let initial_comment = "Nice!";
+                    let channels = this._msg.channel;
+                    this._slack.files.upload({
+                        token,
+                        content,
+                        filetype,
+                        filename,
+                        title,
+                        channels
+                    }, (err, data) => {})
+                    resolve(result)
+                });
+            } else {
+              this.sendMsgSlack("Lo siento! no existe el repositorio que quires actualizar.");
+            }
+
+
         });
     }
 
