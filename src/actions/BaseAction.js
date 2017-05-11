@@ -7,7 +7,8 @@ class BaseAction {
     this._slack = slack;
     this._msg = "";
     this._token = "";
-    this._apiAIToken = "d4e1d57af43648fab7b12c1fbece62ac";
+    this.env=  JSON.parse(process.env.config) ;
+    this._apiAIToken = this.env.APIAI_TOKEN;
     this._apiAI = ApiAI(this._apiAIToken);
   }
 
