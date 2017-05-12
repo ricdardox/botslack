@@ -23,7 +23,6 @@ class Decision extends BaseAction {
     }
 
     init(apiaiRes) {
-
         return new Promise(async(resolve, reject) => {
             let res = await this.sendText(this._msg.text);
             if (res.result.action !== '' && res.result.action !== undefined && res.result.action !== 'input.unknown') {
@@ -34,11 +33,7 @@ class Decision extends BaseAction {
                     classAction.init(res);
                 }
             } else {
-                this._slack.chat.postMessage({
-                    token: this._token,
-                    channel: this._msg.channel,
-                    text: res.result.fulfillment.speech
-                }, (err, data) => {});
+              this.sendMsgSlack(res.result.fulfillment.speech);
             }
             resolve(res);
         });
